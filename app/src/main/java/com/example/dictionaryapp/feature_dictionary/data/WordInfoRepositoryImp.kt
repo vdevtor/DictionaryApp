@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import java.io.IOException
 
-class WordInfoRepository(
+class WordInfoRepositoryImp(
     private val api: DictionaryApi,
     private val dao: WordInfoDao
 ) : WordInfoRepository {
