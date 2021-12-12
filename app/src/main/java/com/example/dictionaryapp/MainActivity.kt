@@ -8,9 +8,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.dictionaryapp.feature_dictionary.presentation.WordInfoItem
 import com.example.dictionaryapp.feature_dictionary.presentation.WordInfoViewModel
 import com.example.dictionaryapp.ui.theme.DictionaryTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -57,22 +59,25 @@ class MainActivity : ComponentActivity() {
                             )
 
                             Spacer(modifier = Modifier.height(16.dp))
-                            LazyColumn{
-                                items(state.wordInfoItems.size){ i ->
-                                        val wordInfo = state.wordInfoItems[i]
-                                    if (i > 0){
+                            LazyColumn {
+                                items(state.wordInfoItems.size) { i ->
+                                    val wordInfo = state.wordInfoItems[i]
+                                    if (i > 0) {
                                         Spacer(modifier = Modifier.height(8.dp))
                                     }
                                     WordInfoItem(wordInfo = wordInfo)
-                                    if (i < state.wordInfoItems.size-1){
+                                    if (i < state.wordInfoItems.size - 1) {
                                         Divider()
                                     }
 
                                 }
                             }
                         }
-
+                        if (state.isloading) {
+                            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                        }
                     }
+
                 }
             }
         }
