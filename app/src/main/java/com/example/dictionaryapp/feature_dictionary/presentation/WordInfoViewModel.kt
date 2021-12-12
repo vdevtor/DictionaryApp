@@ -22,39 +22,41 @@ class WordInfoViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _searchQuery = mutableStateOf<String>("")
-    val searchQuery  : State<String> = _searchQuery
+    val searchQuery: State<String> = _searchQuery
 
     private val _state = mutableStateOf<WordInfoState>(WordInfoState())
-    val state  : State<WordInfoState> = _state
+    val state: State<WordInfoState> = _state
 
-    private val _eventFlow  = MutableSharedFlow<UiEvent>()
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    private var searchJob : Job? = null
+    private var searchJob: Job? = null
 
-    fun onSearch(query : String){
+    fun onSearch(query: String) {
         _searchQuery.value = query
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
             delay(500L)
             getWordInfo(query).onEach { result ->
-                when(result){
-                    is Resource.Success ->{
+                when (result) {
+                    is Resource.Success -> {
                         _state.value = state.value.copy(
                             wordInfoItems = result.data ?: emptyList(),
                             isloading = false
                         )
                     }
-                    is Resource.Error ->{
+                    is Resource.Error -> {
                         _state.value = state.value.copy(
                             wordInfoItems = result.data ?: emptyList(),
                             isloading = false
                         )
-                        _eventFlow.emit(UiEvent.ShowSnackbar(
-                            result.message ?: "Unknown Error"
-                        ))
+                        _eventFlow.emit(
+                            UiEvent.ShowSnackbar(
+                                result.message ?: "Unknown Error"
+                            )
+                        )
                     }
-                    is Resource.Loading ->{
+                    is Resource.Loading -> {
                         _state.value = state.value.copy(
                             wordInfoItems = result.data ?: emptyList(),
                             isloading = true
@@ -66,7 +68,7 @@ class WordInfoViewModel @Inject constructor(
         }
     }
 
-    sealed class UiEvent{
-        data class ShowSnackbar(val message : String) : UiEvent()
+    sealed class UiEvent {
+        data class ShowSnackbar(val message: String) : UiEvent()
     }
 }
